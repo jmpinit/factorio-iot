@@ -1,0 +1,12 @@
+
+{
+  "name": "factorio-iot",
+  "version": "1.0.0",
+  "factorio_version": "0.14",
+  "title": "Factorio IoT",
+  "author": "jmptable",
+  "contact": "",
+  "homepage": "https://github.com/jmptable/factorio-iot",
+  "description": "Internet of Things in Factorio",
+  "dependencies": ["base >= 0.14.0"]
+}
