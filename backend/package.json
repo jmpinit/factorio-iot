@@ -1,0 +1,10 @@
+{
+  "name": "factorio-iot-backend",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "src/index.js",
+  "dependencies": {
+    "simple-rcon": "^0.3.1"
+  }
+}

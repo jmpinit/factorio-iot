@@ -5,4 +5,4 @@ if [ -z $CID ]; then
     exit 1
 fi
 
-docker run --rm -it -p 34190:34197/udp $CID
+docker run --rm -it -p 1337:1337 -p 34190:34197/udp $CID

@@ -10,7 +10,17 @@ RUN ./factorio --create map
 WORKDIR /opt/mods/factorio-iot_1.0.0
 COPY mod .
 
-WORKDIR /opt/factorio/bin/x64
-EXPOSE 34197
-CMD ./factorio --mod-directory /opt/mods --start-server map.zip
+# add the settings
+WORKDIR /var/factorio
+COPY server-settings.json .
 
+WORKDIR /opt/factorio/bin/x64
+
+EXPOSE 34197
+
+CMD ./factorio \
+  --mod-directory /opt/mods \
+  --rcon-port 1337 \
+  --rcon-password secret \
+  --server-settings /var/factorio/server-settings.json \
+  --start-server map.zip
