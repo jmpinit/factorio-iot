@@ -8,5 +8,8 @@
   "contact": "",
   "homepage": "https://github.com/jmptable/factorio-iot",
   "description": "Internet of Things in Factorio",
-  "dependencies": ["base >= 0.14.0"]
+  "dependencies": [
+    "base >= 0.14.0",
+    "websocket >= 1.0.0"
+  ]
 }

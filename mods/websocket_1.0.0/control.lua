@@ -11,14 +11,28 @@ local uuid = (function()
   end
 end)()
 
-function create(address, interfaceName, functionName)
+function setup(interfaceSpec)
+  if interfaceSpec.interface == nil or
+      interfaceSpec.on_open == nil or
+      interfaceSpec.on_message == nil then
+    error('Invalid interface, must specify interface name, on_open, and on_message')
+  end
+
+  global.interfaceSpec = interfaceSpec
+end
+
+function open(rpcId, address)
+  if global.interfaceSpec == nil then
+    error('Interface not setup. Call "setup" with callbacks first')
+  end
+
   local ws = WebSocketInterface:new()
   local connectionId = uuid()
 
   -- everything sent via the remote interfaces must be serializable, so we cannot directly return
   -- the WebSocketInterface instance and must call a given callback interface with the data instead
   ws:on('message', function(message)
-    remote.call(interfaceName, functionName, message)
+    remote.call(global.interfaceSpec.interface, global.interfaceSpec.on_message, connectionId, message)
   end)
 
   ws:on('_send', function (data)
@@ -34,9 +48,7 @@ function create(address, interfaceName, functionName)
   -- ask the helper program to create the WebSocket
   game.write_file('command.pipe', 'open,'..connectionId..','..address..'\n', true, 0)
 
-  game.print('created socket with id '..connectionId..' and address '..address..' -> '..interfaceName..'.'..functionName)
-
-  return connectionId
+  remote.call(global.interfaceSpec.interface, global.interfaceSpec.on_open, rpcId, connectionId)
 end
 
 function tx(connectionId, data)
@@ -64,8 +76,9 @@ function rx(connectionId, data)
 end
 
 remote.add_interface('websocket', {
-  create = create,
-  tx = tx,
+  setup= setup,
+  open= open,
+  tx= tx,
   -- called via RCON by the external helper program which has the actual WebSocket connection
-  _rx = rx,
+  _rx= rx,
 })

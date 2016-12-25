@@ -105,6 +105,10 @@ class FactorioInterface {
           fifoStream.on('line', data => socket.send(data));
         };
 
+        if (!fs.existsSync(path.dirname(fifoPath))) {
+          fs.mkdirSync(path.dirname(fifoPath));
+        }
+
         mkfifo(fifoPath).then(() => openStream());
 
         this.connections[connectionId] = {
